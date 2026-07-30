@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Color Studio — Paint My Room | Van Dam Painting, Portage MI</title>
+<meta name="description" content="Try a new paint color on a photo of your own room — free, in your browser, no signup. The Van Dam Painting Color Studio for Portage, Kalamazoo, and Southwest Michigan homes.">
+<link rel="icon" type="image/png" href="logo-exact.png">
+<link rel="canonical" href="https://bevier19jac.github.io/vandam-painting/studio.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Paint My Room — Van Dam Painting Color Studio">
+<meta property="og:description" content="Upload a photo, select your wall, and preview a new color in seconds. Free, private, no signup.">
+<meta property="og:image" content="https://bevier19jac.github.io/vandam-painting/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1320; --bg2:#111a2b; --panel:#16223a; --panel-2:#1b2a47;
+    --line:rgba(244,239,230,.09); --cream:#f4efe6; --cream-dim:#cfc9bc;
+    --muted:#94a0b5; --orange:#e2591f; --orange-hi:#f2731f;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Inter',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --focus:0 0 0 3px rgba(242,115,31,.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none!important;animation:none!important}
+  }
+  body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.55;min-height:100vh}
+  ::selection{background:var(--orange);color:#fff}
+  button{font-family:var(--sans)}
+  :is(button,a,input,select,textarea,[tabindex]):focus-visible{outline:none;box-shadow:var(--focus);border-radius:6px}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 20px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:11px 22px;border-radius:6px;font-weight:700;font-size:14.5px;text-decoration:none;cursor:pointer;border:none;transition:.2s;color:var(--cream)}
+  .btn-orange{background:linear-gradient(135deg,var(--orange-hi),var(--orange));color:#fff;box-shadow:0 6px 20px rgba(226,89,31,.3)}
+  .btn-orange:hover{transform:translateY(-1px)}
+  .btn-ghost{background:transparent;border:1px solid rgba(244,239,230,.28)}
+  .btn-ghost:hover{border-color:var(--orange-hi);color:var(--orange-hi)}
+  .btn-soft{background:rgba(244,239,230,.07);border:1px solid var(--line)}
+  .btn-soft:hover{background:rgba(244,239,230,.12)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+  .btn.small{min-height:40px;padding:8px 14px;font-size:13px}
+
+  /* header */
+  header{border-bottom:1px solid var(--line);background:rgba(13,19,32,.95)}
+  .hd{display:flex;align-items:center;gap:18px;height:72px}
+  .logo-plate{background:var(--cream);border-radius:8px;padding:7px 12px;display:flex;align-items:center}
+  .logo-plate img{height:24px;display:block}
+  .hd h1{font-family:var(--serif);font-weight:600;font-size:24px;letter-spacing:.01em}
+  .hd .spacer{flex:1}
+  .hd a.back{color:var(--muted);font-size:13.5px;text-decoration:none;padding:10px}
+  .hd a.back:hover{color:var(--orange-hi)}
+  .hd a.call{color:var(--cream);font-size:13.5px;font-weight:600;text-decoration:none;padding:10px}
+  @media(max-width:640px){.hd h1{font-size:19px}.hd a.call{display:none}}
+
+  /* stepper */
+  .stepper{display:flex;gap:8px;padding:22px 0 8px;flex-wrap:wrap}
+  .stepper .st{display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:100px;border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:600;background:transparent}
+  .stepper .st .n{width:22px;height:22px;border-radius:50%;background:rgba(244,239,230,.1);display:flex;align-items:center;justify-content:center;font-size:11.5px}
+  .stepper .st.active{border-color:var(--orange-hi);color:var(--cream)}
+  .stepper .st.active .n{background:var(--orange);color:#fff}
+  .stepper .st.done{color:var(--cream-dim)}
+  .stepper .st.done .n{background:rgba(63,185,80,.25);color:#7ee787}
+
+  main{padding:10px 0 60px}
+  .step-title{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3.4vw,36px);margin:18px 0 6px}
+  .step-sub{color:var(--muted);font-size:15px;max-width:640px;margin-bottom:22px}
+
+  /* step 1 */
+  .drop{border:2px dashed rgba(244,239,230,.25);border-radius:12px;background:linear-gradient(170deg,var(--panel),rgba(22,34,58,.35));padding:52px 26px;text-align:center;cursor:pointer;transition:.2s;max-width:760px}
+  .drop:hover,.drop.over{border-color:var(--orange-hi);background:linear-gradient(170deg,var(--panel-2),rgba(22,34,58,.5))}
+  .drop .big{font-size:17px;font-weight:700;margin:14px 0 4px}
+  .drop .hint{color:var(--muted);font-size:13.5px}
+  .up-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;max-width:760px}
+  .privacy{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:13px;margin-top:18px;max-width:640px}
+  .privacy svg{flex:none;margin-top:2px}
+  .err{display:none;margin-top:14px;background:rgba(218,54,51,.12);border:1px solid rgba(218,54,51,.5);color:#ffb3ae;border-radius:8px;padding:12px 16px;font-size:14px;max-width:760px}
+  .err.show{display:block}
+
+  /* workspace */
+  .ws{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:start}
+  @media(max-width:980px){.ws{grid-template-columns:1fr}}
+  .canvas-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative}
+  .canvas-wrap{position:relative;border-radius:8px;overflow:hidden;background:#0a0f19;touch-action:none;user-select:none;-webkit-user-select:none}
+  .canvas-wrap canvas{display:block;width:100%;height:auto;cursor:crosshair}
+  .canvas-wrap.grabbing canvas{cursor:grabbing}
+  .canvas-note{color:var(--muted);font-size:12.5px;margin-top:10px;text-align:center}
+  .loupe{position:absolute;width:110px;height:110px;border-radius:50%;border:2px solid var(--orange-hi);overflow:hidden;pointer-events:none;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);background:#000;z-index:5}
+  .loupe canvas{width:110px;height:110px}
+  .divider-line{position:absolute;top:0;bottom:0;width:3px;background:var(--cream);z-index:4;cursor:ew-resize;display:none}
+  .divider-line::after{content:"⟨ ⟩";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .panel h3{font-family:var(--serif);font-size:22px;font-weight:600;margin-bottom:6px}
+  .panel .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .tool-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .chip{border:1px solid var(--line);background:transparent;color:var(--cream-dim);border-radius:100px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;min-height:36px}
+  .chip.on{border-color:var(--orange-hi);color:var(--orange-hi);background:rgba(226,89,31,.1)}
+
+  .search{width:100%;background:rgba(13,19,32,.6);border:1px solid rgba(244,239,230,.14);border-radius:6px;padding:11px 13px;color:var(--cream);font-size:14px;margin-bottom:6px}
+  .search:focus{outline:none;border-color:var(--orange-hi)}
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:8px;margin:12px 0}
+  .sw{position:relative;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid rgba(255,255,255,.08);min-width:44px;min-height:44px;padding:0}
+  .sw:hover{transform:scale(1.06)}
+  .sw.sel{border-color:var(--orange-hi);box-shadow:0 0 0 2px rgba(242,115,31,.4)}
+  .sw .fav{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--orange);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center}
+  .sw.isfav .fav{display:flex}
+  .custom-row{display:flex;gap:10px;align-items:center;margin:10px 0}
+  .custom-row input[type=color]{width:52px;height:44px;border:none;background:none;cursor:pointer;padding:0}
+  .custom-row input[type=text]{flex:1;background:rgba(13,19,32,.6);border:1px solid rgba(244,239,230,.14);border-radius:6px;padding:11px 13px;color:var(--cream);font-size:14px;text-transform:uppercase}
+  .sel-info{display:flex;gap:14px;align-items:center;background:rgba(13,19,32,.5);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:8px}
+  .sel-info .dot{width:54px;height:54px;border-radius:10px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  .sel-info b{display:block;font-size:15px}
+  .sel-info small{color:var(--muted);font-size:12px;display:block}
+  .sel-info .trim{display:flex;align-items:center;gap:6px;margin-top:5px;font-size:12px;color:var(--cream-dim)}
+  .sel-info .trim i{width:16px;height:16px;border-radius:4px;display:inline-block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+  .favbtn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--cream-dim);border-radius:8px;width:44px;height:44px;font-size:17px;cursor:pointer;flex:none}
+  .favbtn.on{color:var(--orange-hi);border-color:var(--orange-hi)}
+
+  .slider-row{margin:14px 0}
+  .slider-row label{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--cream-dim);margin-bottom:7px}
+  .slider-row input[type=range]{width:100%;accent-color:var(--orange);height:30px}
+
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .disclaimer{color:var(--muted);font-size:12px;margin-top:14px;font-style:italic}
+
+  .cta-card{background:linear-gradient(120deg,rgba(226,89,31,.16),rgba(226,89,31,.05)),var(--panel);border:1px solid rgba(242,115,31,.4);border-radius:12px;padding:24px;margin-top:22px}
+  .cta-card h3{font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:6px}
+  .cta-card p{color:var(--cream-dim);font-size:14px;margin-bottom:14px}
+  .cta-card .opts{color:var(--muted);font-size:13px;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+  .cta-card .opts label{display:flex;gap:9px;align-items:flex-start;cursor:pointer}
+  .cta-card .opts input{margin-top:3px;accent-color:var(--orange);width:16px;height:16px}
+
+  /* quiz modal */
+  .modal{position:fixed;inset:0;z-index:200;background:rgba(8,11,18,.9);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 16px}
+  .modal.open{display:flex}
+  .modal-card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;max-width:680px;width:100%;padding:30px;position:relative;margin:auto}
+  .modal-card h2{font-family:var(--serif);font-weight:600;font-size:30px;margin-bottom:4px}
+  .modal-card .msub{color:var(--muted);font-size:14px;margin-bottom:20px}
+  .modal-close{position:absolute;top:14px;right:14px;background:none;border:1px solid var(--line);color:var(--cream);width:44px;height:44px;border-radius:50%;font-size:17px;cursor:pointer}
+  .q{margin-bottom:18px}
+  .q .qt{font-weight:700;font-size:14.5px;margin-bottom:9px}
+  .q .opts{display:flex;gap:8px;flex-wrap:wrap}
+  .q .opts button{border:1px solid var(--line);background:transparent;color:var(--cream-dim);border-radius:100px;padding:9px 16px;font-size:13px;cursor:pointer;min-height:40px}
+  .q .opts button.on{border-color:var(--orange-hi);color:var(--orange-hi);background:rgba(226,89,31,.1)}
+  .rec{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+  .rec .pal{display:flex;flex-direction:column;gap:4px;flex:none}
+  .rec .pal i{width:52px;height:34px;border-radius:6px;display:block;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .rec b{font-size:15px}
+  .rec p{color:var(--muted);font-size:13px;margin:4px 0 10px}
+  .rec .meta{color:var(--cream-dim);font-size:12px;margin-bottom:8px}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--panel-2);border:1px solid var(--line);color:var(--cream);padding:13px 22px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:400;box-shadow:0 14px 40px rgba(0,0,0,.5);max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .seo-notes{border-top:1px solid var(--line);margin-top:50px;padding-top:34px;max-width:820px}
+  .seo-notes h2{font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:10px}
+  .seo-notes p{color:var(--muted);font-size:14px;margin-bottom:12px}
+  footer{border-top:1px solid var(--line);padding:26px 0 34px;color:var(--muted);font-size:13px;margin-top:40px}
+  .hidden{display:none!important}
+  .fullscreen-mode{position:fixed!important;inset:0;z-index:300;border-radius:0;padding:12px;background:#0a0f19;display:flex;flex-direction:column;justify-content:center}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <a class="logo-plate" href="index.html" aria-label="Back to Van Dam Painting home"><img src="logo-exact.png" alt="Van Dam Painting"></a>
+    <h1>Color Studio</h1>
+    <span class="spacer"></span>
+    <a class="back" href="index.html">← Back to site</a>
+    <a class="call" id="hdCall" href="#">Call</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="stepper" aria-label="Progress">
+    <div class="st" id="st1"><span class="n">1</span> Add a room photo</div>
+    <div class="st" id="st2"><span class="n">2</span> Select the wall</div>
+    <div class="st" id="st3"><span class="n">3</span> Paint &amp; compare</div>
+  </nav>
+
+  <!-- STEP 1 -->
+  <section id="step1">
+    <h2 class="step-title">See it before we paint it.</h2>
+    <p class="step-sub">Upload a photo of your room, trace the wall, and try any color in seconds. Free, no signup — everything happens right here on your device.</p>
+
+    <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload a room photo. Press Enter to open the file picker, or drag and drop an image here.">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke="#f2731f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="#94a0b5" stroke-width="2" stroke-linecap="round"/></svg>
+      <div class="big">Drop a photo here, or tap to choose one</div>
+      <div class="hint">JPEG, PNG, or WebP · up to 25 MB</div>
+    </div>
+    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" class="sr-only" aria-hidden="true" tabindex="-1">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="sr-only" aria-hidden="true" tabindex="-1">
+    <div class="up-actions">
+      <button class="btn btn-soft" id="btnCamera">📷&nbsp; Take a photo</button>
+      <button class="btn btn-ghost" id="btnExample">Try the example room</button>
+      <button class="btn btn-ghost" id="btnQuiz1">Not sure on color? Take the 60-second quiz</button>
+    </div>
+    <div class="err" id="upErr" role="alert"></div>
+    <p class="privacy">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L4 6v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V6l-8-4z" stroke="#f2731f" stroke-width="2"/></svg>
+      Your photo stays on your device unless you choose to include it with an estimate request. Nothing is uploaded to any server.
+    </p>
+  </section>
+
+  <!-- STEP 2 & 3 workspace -->
+  <section id="workspace" class="hidden">
+    <h2 class="step-title" id="wsTitle">Select the wall</h2>
+    <p class="step-sub" id="wsSub">Tap around the edges of the wall you want to paint. Tap your first point (or “Close shape”) to finish. You can drag any point to fine-tune it.</p>
+    <div class="ws">
+      <div>
+        <div class="canvas-card" id="canvasCard">
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="view"></canvas>
+            <div class="divider-line" id="dividerLine" role="slider" aria-label="Before and after comparison divider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"></div>
+            <div class="loupe" id="loupe"><canvas id="loupeCanvas" width="110" height="110"></canvas></div>
+          </div>
+          <div class="canvas-note" id="canvasNote">Tip: get close to the corners — you can always drag points afterward.</div>
+        </div>
+      </div>
+      <div>
+        <!-- wall tools -->
+        <div class="panel" id="wallPanel">
+          <h3>Wall selection</h3>
+          <p class="sub" id="wallStatus">0 points placed — tap the photo to start.</p>
+          <div class="tool-row">
+            <button class="btn btn-soft small" id="btnUndo">↩︎ Undo point</button>
+            <button class="btn btn-soft small" id="btnResetPoly">Start over</button>
+            <button class="btn btn-soft small" id="btnClosePoly" disabled>Close shape</button>
+          </div>
+          <div class="tool-row">
+            <button class="btn btn-ghost small" id="btnWholePhoto">Or paint the whole photo</button>
+          </div>
+          <div class="tool-row" style="margin-top:6px">
+            <button class="btn btn-ghost small" id="btnNewPhoto">↞ Different photo</button>
+            <button class="btn btn-orange" id="btnToColor" disabled>Continue to colors →</button>
+          </div>
+        </div>
+        <!-- color tools -->
+        <div class="panel hidden" id="colorPanel">
+          <h3>Choose a color</h3>
+          <p class="sub">Generic designer shades — Bryan can match them to any paint line.</p>
+          <input class="search" id="colorSearch" type="search" placeholder="Search colors… (e.g. sage, navy, warm)" aria-label="Search colors">
+          <div class="chiprow" id="familyChips" role="group" aria-label="Filter by color family"></div>
+          <div class="swatches" id="swatchGrid" role="listbox" aria-label="Paint colors"></div>
+          <div class="custom-row">
+            <input type="color" id="customColor" value="#8a9a7e" aria-label="Custom color picker">
+            <input type="text" id="hexInput" placeholder="#HEX" maxlength="7" aria-label="Hex color code">
+            <button class="btn btn-soft small" id="btnApplyHex">Apply</button>
+          </div>
+          <div id="recentWrap" class="hidden">
+            <p class="sub" style="margin:10px 0 6px">Recently used</p>
+            <div class="swatches" id="recentGrid" style="grid-template-columns:repeat(auto-fill,minmax(38px,1fr))"></div>
+          </div>
+          <div class="sel-info">
+            <span class="dot" id="selDot"></span>
+            <span>
+              <b id="selName">Garden Sage</b>
+              <small id="selMeta">Greens · neutral undertone</small>
+              <span class="trim" id="selTrim"></span>
+            </span>
+            <button class="favbtn" id="btnFav" aria-label="Save to favorites" aria-pressed="false">♥</button>
+          </div>
+
+          <div class="slider-row">
+            <label for="intensity"><span>Paint intensity</span><span id="intensityVal">100%</span></label>
+            <input type="range" id="intensity" min="20" max="100" value="100">
+          </div>
+          <div class="slider-row">
+            <label for="brightness"><span>Brightness</span><span id="brightnessVal">0</span></label>
+            <input type="range" id="brightness" min="-20" max="20" value="0">
+          </div>
+
+          <div class="tool-row">
+            <button class="btn btn-soft small" id="btnCompare" aria-pressed="false">⇆ Compare slider</button>
+            <button class="btn btn-soft small" id="btnHold">👁 Hold to see before</button>
+          </div>
+          <div class="result-actions">
+            <button class="btn btn-soft small" id="btnFullscreen">⛶ Full screen</button>
+            <button class="btn btn-soft small" id="btnDownload">↓ Download preview</button>
+            <button class="btn btn-soft small" id="btnShare">↗ Share</button>
+          </div>
+          <div class="tool-row" style="margin-top:12px">
+            <button class="btn btn-ghost small" id="btnEditWall">✎ Change wall selection</button>
+            <button class="btn btn-ghost small" id="btnRestart">Start over</button>
+            <button class="btn btn-ghost small" id="btnQuiz2">Color quiz</button>
+          </div>
+          <p class="disclaimer">Digital previews are an approximation. Lighting, screens, surface texture, and paint finish can affect the final appearance.</p>
+        </div>
+
+        <!-- estimate CTA -->
+        <div class="cta-card hidden" id="ctaCard">
+          <h3>Love the direction?</h3>
+          <p>Let Bryan see the room and provide a clear, written estimate.</p>
+          <div class="opts">
+            <label><input type="checkbox" id="optDownload" checked> Download my preview image so I can show it to Bryan</label>
+          </div>
+          <button class="btn btn-orange" id="btnEstimate" style="width:100%">Request This Transformation</button>
+          <p class="disclaimer" style="margin-top:10px">This takes you to the estimate form with your color attached. Your photo is never sent anywhere automatically — the downloaded preview is yours to share.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- honest color education / SEO copy -->
+  <div class="seo-notes">
+    <h2>A quick word about color previews</h2>
+    <p>Every screen shows color a little differently, and the same paint can look surprisingly different at noon versus lamplight. Sheen matters too — a matte wall and an eggshell wall in the identical color won't read the same. Treat this studio as a direction-finder, not a final answer.</p>
+    <p>When you're close to a decision, Van Dam Painting can help you confirm the final color in your actual space with real samples on the real wall — in the same Portage and Southwest Michigan light your room lives in. Interior painting, exterior painting, wallpaper installation and removal, and commercial wall coverings across Kalamazoo and Southwest Michigan.</p>
+  </div>
+</main>
+
+<!-- QUIZ MODAL -->
+<div class="modal" id="quizModal" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="quizClose" aria-label="Close quiz">✕</button>
+    <h2 id="quizTitle">Find my color direction</h2>
+    <p class="msub">Six quick questions. A simple rule-based guide — your taste always wins.</p>
+    <div id="quizQs"></div>
+    <div id="quizResults" class="hidden">
+      <p class="msub" id="quizIntro"></p>
+      <div id="recList"></div>
+      <button class="btn btn-ghost small" id="quizAgain">↺ Retake quiz</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="wrap">© <span id="yr"></span> Van Dam Painting · <span id="ftTown"></span> · <a href="index.html" style="color:var(--cream-dim)">vandam home</a></div>
+</footer>
+
+<script src="site-config.js"></script>
+<script src="studio-core.js"></script>
+<script>
+(function(){
+"use strict";
+var C = window.VDPCore, CFG = window.VDP_CONFIG;
+
+/* ---------- config wiring ---------- */
+document.getElementById('yr').textContent = new Date().getFullYear();
+document.getElementById('ftTown').textContent = CFG.business.town;
+var hdCall = document.getElementById('hdCall');
+hdCall.href = 'tel:' + CFG.business.phone;
+hdCall.textContent = 'Call ' + CFG.business.phoneDisplay;
+
+/* ---------- state ---------- */
+var S = {
+  imgCanvas: null,      // downscaled original (working resolution)
+  points: [],           // polygon points in image coords
+  closed: false,
+  color: C.PALETTE[21], // Garden Sage default
+  intensity: 1,
+  brightness: 0,
+  recolorLayer: null,   // canvas with feathered recolored region
+  wallMid: 0.72,
+  compare: false,
+  dividerPct: 0.5,
+  holdingBefore: false,
+  step: 1,
+  dragIdx: -1,
+};
+var MAX_WORK = 1400;
+
+var view = document.getElementById('view');
+var vctx = view.getContext('2d');
+var wrap = document.getElementById('canvasWrap');
+var toastEl = document.getElementById('toast'), toastT;
+function toast(msg){
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 3200);
+}
+
+/* ---------- steps ---------- */
+function setStep(n){
+  S.step = n;
+  [1,2,3].forEach(function(i){
+    var el = document.getElementById('st'+i);
+    el.classList.toggle('active', i===n);
+    el.classList.toggle('done', i<n);
+  });
+  document.getElementById('step1').classList.toggle('hidden', n!==1);
+  document.getElementById('workspace').classList.toggle('hidden', n===1);
+  document.getElementById('wallPanel').classList.toggle('hidden', n!==2);
+  document.getElementById('colorPanel').classList.toggle('hidden', n!==3);
+  document.getElementById('ctaCard').classList.toggle('hidden', n!==3);
+  document.getElementById('wsTitle').textContent = n===2 ? 'Select the wall' : 'Paint it. Compare it. Love it.';
+  document.getElementById('wsSub').textContent = n===2 ?
+    'Tap around the edges of the wall you want to paint. Tap your first point (or “Close shape”) to finish. Drag any point to fine-tune.' :
+    'Pick a color below — the wall keeps its real lighting and texture. Use the sliders to tune it, then compare and share.';
+  document.getElementById('canvasNote').textContent = n===2 ?
+    'Tip: get close to the corners — you can drag points afterward to fine-tune.' :
+    'The preview keeps your wall’s real shadows and texture.';
+  if (n===3){ buildRecolorLayer(); } else { hideCompare(); }
+  render();
+}
+
+/* ---------- step 1: photo ---------- */
+var drop = document.getElementById('drop');
+var fileInput = document.getElementById('fileInput');
+var cameraInput = document.getElementById('cameraInput');
+var upErr = document.getElementById('upErr');
+
+function showErr(msg){ upErr.textContent = msg; upErr.classList.add('show'); }
+function clearErr(){ upErr.classList.remove('show'); }
+
+drop.addEventListener('click', function(){ fileInput.click(); });
+drop.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fileInput.click(); }});
+['dragover','dragenter'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function(e){
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+fileInput.addEventListener('change', function(){ if(fileInput.files[0]) loadFile(fileInput.files[0]); fileInput.value=''; });
+cameraInput.addEventListener('change', function(){ if(cameraInput.files[0]) loadFile(cameraInput.files[0]); cameraInput.value=''; });
+document.getElementById('btnCamera').addEventListener('click', function(){ cameraInput.click(); });
+document.getElementById('btnExample').addEventListener('click', function(){
+  var img = new Image();
+  img.onload = function(){ acceptImage(img, img.width, img.height); };
+  img.onerror = function(){ showErr('Could not load the example image.'); };
+  img.src = 'assets/example-room.jpg';
+});
+
+function loadFile(file){
+  clearErr();
+  var v = C.validateImageFile(file);
+  if (!v.ok){ showErr(v.error); return; }
+  // createImageBitmap honors EXIF orientation in modern browsers
+  if (window.createImageBitmap){
+    createImageBitmap(file, { imageOrientation: 'from-image' }).then(function(bmp){
+      acceptImage(bmp, bmp.width, bmp.height);
+      if (bmp.close) bmp.close();
+    }).catch(function(){ loadViaObjectURL(file); });
+  } else { loadViaObjectURL(file); }
+}
+function loadViaObjectURL(file){
+  var url = URL.createObjectURL(file);
+  var img = new Image();
+  img.onload = function(){ acceptImage(img, img.width, img.height); URL.revokeObjectURL(url); };
+  img.onerror = function(){ URL.revokeObjectURL(url); showErr('That image could not be read. Try a different photo.'); };
+  img.src = url;
+}
+function acceptImage(src, w, h){
+  var fit = C.fitWithin(w, h, MAX_WORK);
+  var c = document.createElement('canvas');
+  c.width = fit.w; c.height = fit.h;
+  c.getContext('2d').drawImage(src, 0, 0, fit.w, fit.h);
+  S.imgCanvas = c;
+  S.points = []; S.closed = false; S.recolorLayer = null;
+  view.width = fit.w; view.height = fit.h;
+  setStep(2);
+  updateWallUI();
+  window.scrollTo({top:0});
+}
+
+/* ---------- step 2: polygon ---------- */
+function canvasPos(e){
+  var r = view.getBoundingClientRect();
+  var cx = (e.touches ? e.touches[0].clientX : e.clientX);
+  var cy = (e.touches ? e.touches[0].clientY : e.clientY);
+  return { x: (cx - r.left) * (view.width / r.width),
+           y: (cy - r.top) * (view.height / r.height) };
+}
+function nearIdx(p, tol){
+  for (var i=0;i<S.points.length;i++){
+    var dx=S.points[i][0]-p.x, dy=S.points[i][1]-p.y;
+    if (Math.hypot(dx,dy) < tol) return i;
+  }
+  return -1;
+}
+var loupe = document.getElementById('loupe');
+var loupeCtx = document.getElementById('loupeCanvas').getContext('2d');
+function showLoupe(p, clientX, clientY){
+  var r = wrap.getBoundingClientRect();
+  loupe.style.display='block';
+  loupe.style.left = Math.min(r.width-120, Math.max(10, clientX - r.left - 55)) + 'px';
+  loupe.style.top  = (clientY - r.top - 150) + 'px';
+  loupeCtx.imageSmoothingEnabled = false;
+  loupeCtx.clearRect(0,0,110,110);
+  loupeCtx.drawImage(view, p.x-27, p.y-27, 55, 55, 0, 0, 110, 110);
+  loupeCtx.strokeStyle = '#f2731f'; loupeCtx.lineWidth = 2;
+  loupeCtx.beginPath(); loupeCtx.moveTo(55,40); loupeCtx.lineTo(55,70); loupeCtx.moveTo(40,55); loupeCtx.lineTo(70,55); loupeCtx.stroke();
+}
+function hideLoupe(){ loupe.style.display='none'; }
+
+var pointerDown = false, moved = false, downPos = null;
+wrap.addEventListener('pointerdown', function(e){
+  if (S.step===3){ compyDown(e); return; }
+  if (e.button && e.button!==0) return;
+  pointerDown = true; moved = false;
+  downPos = canvasPos(e);
+  var tol = view.width * 0.03 + 8;
+  S.dragIdx = nearIdx(downPos, tol);
+  if (S.dragIdx !== -1 && e.pointerType==='touch') showLoupe(downPos, e.clientX, e.clientY);
+  wrap.setPointerCapture && wrap.setPointerCapture(e.pointerId);
+});
+wrap.addEventListener('pointermove', function(e){
+  if (S.step===3){ compyMove(e); return; }
+  if (!pointerDown) return;
+  var p = canvasPos(e);
+  if (S.dragIdx !== -1){
+    moved = true;
+    S.points[S.dragIdx] = [Math.max(0,Math.min(view.width,p.x)), Math.max(0,Math.min(view.height,p.y))];
+    if (e.pointerType==='touch') showLoupe(p, e.clientX, e.clientY);
+    render();
+  } else if (downPos && Math.hypot(p.x-downPos.x, p.y-downPos.y) > 12){
+    moved = true; // pan-ish gesture without target: ignore
+  }
+});
+wrap.addEventListener('pointerup', function(e){
+  if (S.step===3){ compyUp(e); return; }
+  hideLoupe();
+  if (!pointerDown) return;
+  pointerDown = false;
+  var wasDrag = S.dragIdx !== -1 && moved;
+  var tappedIdx = S.dragIdx;
+  S.dragIdx = -1;
+  if (wasDrag){ if (S.closed) {} ; updateWallUI(); render(); return; }
+  if (moved) return;
+  var p = canvasPos(e);
+  if (S.closed) return; // closed: only dragging allowed (or explicit reset)
+  // close if tapping first point
+  var tol = view.width * 0.035 + 10;
+  if (S.points.length >= 3 && tappedIdx === 0){ closePoly(); return; }
+  if (tappedIdx !== -1) return;
+  S.points.push([p.x, p.y]);
+  updateWallUI(); render();
+});
+wrap.addEventListener('pointercancel', function(){ pointerDown=false; S.dragIdx=-1; hideLoupe(); });
+
+function closePoly(){
+  if (S.points.length < 3) return;
+  if (C.polygonArea(S.points) < (view.width*view.height)*0.002){
+    toast('That selection is very small — try tracing the wall a bit larger.');
+  }
+  S.closed = true;
+  updateWallUI(); render();
+}
+document.getElementById('btnClosePoly').addEventListener('click', closePoly);
+document.getElementById('btnUndo').addEventListener('click', function(){
+  if (S.closed){ S.closed=false; }
+  else S.points.pop();
+  updateWallUI(); render();
+});
+document.getElementById('btnResetPoly').addEventListener('click', function(){
+  S.points=[]; S.closed=false; updateWallUI(); render();
+});
+document.getElementById('btnWholePhoto').addEventListener('click', function(){
+  var w=view.width, h=view.height, m=Math.round(Math.min(w,h)*0.02);
+  S.points=[[m,m],[w-m,m],[w-m,h-m],[m,h-m]]; S.closed=true;
+  updateWallUI(); render();
+});
+document.getElementById('btnNewPhoto').addEventListener('click', function(){ setStep(1); });
+document.getElementById('btnToColor').addEventListener('click', function(){ setStep(3); });
+document.getElementById('btnEditWall').addEventListener('click', function(){ setStep(2); });
+document.getElementById('btnRestart').addEventListener('click', function(){ setStep(1); });
+
+function updateWallUI(){
+  var n = S.points.length;
+  var status = document.getElementById('wallStatus');
+  if (S.closed) status.textContent = 'Wall selected ✓ — drag points to fine-tune, or continue.';
+  else if (n===0) status.textContent = '0 points placed — tap the photo to start.';
+  else if (n<3) status.textContent = n + ' point' + (n>1?'s':'') + ' placed — keep going around the wall.';
+  else status.textContent = n + ' points placed — tap your first point or “Close shape” to finish.';
+  document.getElementById('btnClosePoly').disabled = S.closed || n<3;
+  document.getElementById('btnToColor').disabled = !S.closed;
+}
+
+/* ---------- render ---------- */
+function drawPolygonOverlay(ctx){
+  if (!S.points.length) return;
+  ctx.save();
+  ctx.lineWidth = Math.max(2, view.width/450);
+  ctx.strokeStyle = '#f2731f';
+  ctx.setLineDash(S.closed ? [] : [8,6]);
+  ctx.beginPath();
+  ctx.moveTo(S.points[0][0], S.points[0][1]);
+  for (var i=1;i<S.points.length;i++) ctx.lineTo(S.points[i][0], S.points[i][1]);
+  if (S.closed) ctx.closePath();
+  ctx.stroke();
+  if (S.closed){
+    ctx.fillStyle = 'rgba(242,115,31,.14)';
+    ctx.fill();
+  }
+  var r = Math.max(6, view.width/160);
+  S.points.forEach(function(p, i){
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7);
+    ctx.fillStyle = i===0 ? '#f2731f' : '#f4efe6';
+    ctx.fill();
+    ctx.strokeStyle = '#0d1320'; ctx.lineWidth = 2; ctx.stroke();
+  });
+  ctx.restore();
+}
+function render(){
+  if (!S.imgCanvas) return;
+  vctx.clearRect(0,0,view.width,view.height);
+  vctx.drawImage(S.imgCanvas, 0, 0);
+  if (S.step===3 && S.recolorLayer && !S.holdingBefore){
+    if (S.compare){
+      var cut = view.width * S.dividerPct;
+      vctx.save();
+      vctx.beginPath(); vctx.rect(cut, 0, view.width-cut, view.height); vctx.clip();
+      vctx.globalAlpha = S.intensity;
+      vctx.drawImage(S.recolorLayer, 0, 0);
+      vctx.restore();
+      // labels
+      vctx.save();
+      vctx.font = '600 ' + Math.max(12, view.width/60) + 'px Inter, sans-serif';
+      vctx.fillStyle = 'rgba(13,19,32,.7)'; vctx.fillRect(10, 10, 74, 30);
+      vctx.fillStyle = '#f4efe6'; vctx.fillText('BEFORE', 18, 30);
+      vctx.fillStyle = '#e2591f'; vctx.fillRect(view.width-80, 10, 70, 30);
+      vctx.fillStyle = '#fff'; vctx.fillText('AFTER', view.width-70, 30);
+      vctx.restore();
+    } else {
+      vctx.globalAlpha = S.intensity;
+      vctx.drawImage(S.recolorLayer, 0, 0);
+      vctx.globalAlpha = 1;
+    }
+  }
+  if (S.step===2) drawPolygonOverlay(vctx);
+}
+
+/* ---------- recolor engine ---------- */
+function buildMask(){
+  var m = document.createElement('canvas');
+  m.width = view.width; m.height = view.height;
+  var mc = m.getContext('2d');
+  var feather = Math.max(1.5, view.width/500);
+  if (mc.filter !== undefined) mc.filter = 'blur(' + feather + 'px)';
+  mc.fillStyle = '#fff';
+  mc.beginPath();
+  mc.moveTo(S.points[0][0], S.points[0][1]);
+  for (var i=1;i<S.points.length;i++) mc.lineTo(S.points[i][0], S.points[i][1]);
+  mc.closePath(); mc.fill();
+  return m;
+}
+var rebuildT = null;
+function buildRecolorLayer(){
+  if (!S.closed || !S.imgCanvas) return;
+  var w = view.width, h = view.height;
+  var mask = buildMask();
+  var maskData = mask.getContext('2d').getImageData(0,0,w,h).data;
+  var src = S.imgCanvas.getContext('2d').getImageData(0,0,w,h);
+  var sd = src.data;
+  // median luminance of selection (sampled)
+  var lums = [];
+  for (var i=0;i<sd.length;i+=4*97){
+    if (maskData[i+3] > 200){
+      lums.push(C.luminance(sd[i],sd[i+1],sd[i+2]));
+    }
+  }
+  lums.sort(function(a,b){return a-b;});
+  S.wallMid = lums.length ? lums[Math.floor(lums.length/2)] : 0.72;
+
+  var target = C.hexToRgb(S.color.hex);
+  var out = new ImageData(w, h);
+  var od = out.data;
+  var bright = S.brightness / 100;
+  for (var p=0;p<sd.length;p+=4){
+    var a = maskData[p+3];
+    if (!a) continue;
+    var r=sd[p], g=sd[p+1], b=sd[p+2];
+    var L = (0.299*r + 0.587*g + 0.114*b)/255;
+    var res = recolorFast(L, target, bright);
+    od[p]=res.r; od[p+1]=res.g; od[p+2]=res.b; od[p+3]=a;
+  }
+  var layer = document.createElement('canvas');
+  layer.width=w; layer.height=h;
+  layer.getContext('2d').putImageData(out, 0, 0);
+  S.recolorLayer = layer;
+  render();
+}
+var targetHslCache = null, targetHexCache = '';
+function recolorFast(L, target, bright){
+  if (targetHexCache !== S.color.hex){
+    targetHslCache = C.rgbToHsl(target.r, target.g, target.b);
+    targetHexCache = S.color.hex;
+  }
+  var t = targetHslCache;
+  var newL = t.l + (L - S.wallMid) * 0.85 + bright;
+  newL = Math.max(0.02, Math.min(0.98, newL));
+  var rgb = C.hslToRgb(t.h, t.s, newL);
+  return { r: rgb.r, g: rgb.g, b: rgb.b };
+}
+function queueRebuild(){
+  clearTimeout(rebuildT);
+  rebuildT = setTimeout(buildRecolorLayer, 120);
+}
+
+/* ---------- step 3: colors ---------- */
+var selColor = null;
+function setColor(c, remember){
+  S.color = c;
+  targetHexCache = '';
+  document.getElementById('selDot').style.background = c.hex;
+  document.getElementById('selName').textContent = c.name;
+  document.getElementById('selMeta').textContent = (c.family || 'Custom') + ' · ' + (c.undertone || 'custom') + ' undertone · ' + c.hex.toUpperCase();
+  var trim = C.trimFor(c.undertone);
+  document.getElementById('selTrim').innerHTML = 'Trim pairing: <i style="background:'+trim.hex+'"></i> ' + trim.name;
+  document.getElementById('customColor').value = c.hex;
+  document.getElementById('hexInput').value = c.hex.toUpperCase();
+  updateFavBtn();
+  markSelectedSwatch();
+  if (remember !== false) pushRecent(c);
+  queueRebuild();
+}
+
+/* palette UI */
+var activeFamily = 'All';
+function famList(){
+  var fams = C.FAMILIES.slice();
+  if (getFavs().length) fams.splice(1, 0, '♥ Favorites');
+  return fams;
+}
+function renderChips(){
+  var el = document.getElementById('familyChips');
+  el.innerHTML = '';
+  famList().forEach(function(f){
+    var b = document.createElement('button');
+    b.className = 'chip' + (f===activeFamily?' on':'');
+    b.textContent = f; b.type='button';
+    b.addEventListener('click', function(){ activeFamily=f; renderChips(); renderSwatches(); });
+    el.appendChild(b);
+  });
+}
+function renderSwatches(){
+  var q = document.getElementById('colorSearch').value.trim().toLowerCase();
+  var grid = document.getElementById('swatchGrid');
+  grid.innerHTML = '';
+  var favs = getFavs();
+  var list = C.PALETTE.filter(function(c){
+    if (activeFamily === '♥ Favorites' && favs.indexOf(c.hex) === -1) return false;
+    if (activeFamily !== 'All' && activeFamily !== '♥ Favorites' && c.family !== activeFamily) return false;
+    if (q && (c.name+' '+c.family+' '+c.undertone).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+  list.forEach(function(c){
+    var b = document.createElement('button');
+    b.className = 'sw' + (S.color && S.color.hex===c.hex ? ' sel':'') + (favs.indexOf(c.hex)!==-1?' isfav':'');
+    b.style.background = c.hex;
+    b.title = c.name + ' ' + c.hex;
+    b.setAttribute('aria-label', c.name + ', ' + c.family);
+    b.dataset.hex = c.hex;
+    b.innerHTML = '<span class="fav">♥</span>';
+    b.addEventListener('click', function(){ setColor(c); });
+    grid.appendChild(b);
+  });
+  if (!list.length) grid.innerHTML = '<p style="grid-column:1/-1;color:var(--muted);font-size:13px">No colors match — try another search.</p>';
+}
+function markSelectedSwatch(){
+  document.querySelectorAll('#swatchGrid .sw').forEach(function(el){
+    el.classList.toggle('sel', el.dataset.hex === S.color.hex);
+  });
+}
+document.getElementById('colorSearch').addEventListener('input', renderSwatches);
+
+/* custom color */
+function customColorObj(hex){
+  var found = null;
+  C.PALETTE.forEach(function(c){ if (c.hex.toLowerCase()===hex.toLowerCase()) found=c; });
+  if (found) return found;
+  var rgb = C.hexToRgb(hex);
+  var hsl = C.rgbToHsl(rgb.r,rgb.g,rgb.b);
+  var undertone = (hsl.h>0.05 && hsl.h<0.2) || hsl.h>0.9 ? 'warm' : (hsl.h>0.4 && hsl.h<0.75) ? 'cool' : 'neutral';
+  return { name:'Custom '+hex.toUpperCase(), hex:hex, family:'Custom', undertone:undertone };
+}
+document.getElementById('customColor').addEventListener('input', function(e){
+  setColor(customColorObj(e.target.value));
+});
+function applyHex(){
+  var v = document.getElementById('hexInput').value.trim();
+  if (v && v[0] !== '#') v = '#'+v;
+  if (!C.hexToRgb(v)){ toast('That doesn’t look like a valid hex code (e.g. #8A9A7E).'); return; }
+  setColor(customColorObj(v));
+}
+document.getElementById('btnApplyHex').addEventListener('click', applyHex);
+document.getElementById('hexInput').addEventListener('keydown', function(e){ if(e.key==='Enter') applyHex(); });
+
+/* recents + favorites (local only) */
+function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){ return []; } }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function pushRecent(c){
+  var r = lsGet('vdp-recent').filter(function(x){ return x.hex!==c.hex; });
+  r.unshift({name:c.name, hex:c.hex, family:c.family, undertone:c.undertone});
+  lsSet('vdp-recent', r.slice(0,8));
+  renderRecents();
+}
+function renderRecents(){
+  var r = lsGet('vdp-recent');
+  document.getElementById('recentWrap').classList.toggle('hidden', !r.length);
+  var g = document.getElementById('recentGrid');
+  g.innerHTML='';
+  r.forEach(function(c){
+    var b=document.createElement('button');
+    b.className='sw'; b.style.background=c.hex; b.title=c.name;
+    b.setAttribute('aria-label','Recent: '+c.name);
+    b.addEventListener('click', function(){ setColor(c); });
+    g.appendChild(b);
+  });
+}
+function getFavs(){ return lsGet('vdp-favs'); }
+function updateFavBtn(){
+  var on = getFavs().indexOf(S.color.hex)!==-1;
+  var b = document.getElementById('btnFav');
+  b.classList.toggle('on', on);
+  b.setAttribute('aria-pressed', on?'true':'false');
+}
+document.getElementById('btnFav').addEventListener('click', function(){
+  var f = getFavs();
+  var i = f.indexOf(S.color.hex);
+  if (i===-1){ f.push(S.color.hex); toast('Saved to favorites'); } else f.splice(i,1);
+  lsSet('vdp-favs', f);
+  updateFavBtn(); renderChips(); renderSwatches();
+});
+
+/* sliders */
+document.getElementById('intensity').addEventListener('input', function(e){
+  S.intensity = e.target.value/100;
+  document.getElementById('intensityVal').textContent = e.target.value + '%';
+  render();
+});
+document.getElementById('brightness').addEventListener('input', function(e){
+  S.brightness = +e.target.value;
+  document.getElementById('brightnessVal').textContent = (e.target.value>0?'+':'')+e.target.value;
+  queueRebuild();
+});
+
+/* compare */
+var divider = document.getElementById('dividerLine');
+function showCompare(){
+  S.compare = true;
+  divider.style.display='block';
+  positionDivider();
+  document.getElementById('btnCompare').setAttribute('aria-pressed','true');
+  render();
+}
+function hideCompare(){
+  S.compare = false;
+  divider.style.display='none';
+  document.getElementById('btnCompare').setAttribute('aria-pressed','false');
+  render();
+}
+document.getElementById('btnCompare').addEventListener('click', function(){
+  S.compare ? hideCompare() : showCompare();
+});
+function positionDivider(){
+  divider.style.left = (S.dividerPct*100) + '%';
+  divider.setAttribute('aria-valuenow', Math.round(S.dividerPct*100));
+}
+var dragDivider = false;
+function compyDown(e){
+  if (!S.compare) return;
+  dragDivider = true; compyMove(e);
+}
+function compyMove(e){
+  if (!S.compare || !dragDivider) return;
+  var r = wrap.getBoundingClientRect();
+  var x = (e.touches?e.touches[0].clientX:e.clientX) - r.left;
+  S.dividerPct = Math.max(0.05, Math.min(0.95, x / r.width));
+  positionDivider(); render();
+}
+function compyUp(){ dragDivider = false; }
+divider.addEventListener('keydown', function(e){
+  if (e.key==='ArrowLeft'){ S.dividerPct=Math.max(0.05,S.dividerPct-0.05); positionDivider(); render(); }
+  if (e.key==='ArrowRight'){ S.dividerPct=Math.min(0.95,S.dividerPct+0.05); positionDivider(); render(); }
+});
+
+/* hold to see before */
+var holdBtn = document.getElementById('btnHold');
+function holdStart(e){ e.preventDefault(); S.holdingBefore=true; render(); }
+function holdEnd(){ if(S.holdingBefore){ S.holdingBefore=false; render(); } }
+holdBtn.addEventListener('pointerdown', holdStart);
+holdBtn.addEventListener('pointerup', holdEnd);
+holdBtn.addEventListener('pointerleave', holdEnd);
+holdBtn.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ holdStart(e); }});
+holdBtn.addEventListener('keyup', holdEnd);
+
+/* fullscreen */
+document.getElementById('btnFullscreen').addEventListener('click', function(){
+  var card = document.getElementById('canvasCard');
+  if (card.classList.contains('fullscreen-mode')){
+    card.classList.remove('fullscreen-mode');
+    if (document.fullscreenElement) document.exitFullscreen().catch(function(){});
+    this.textContent = '⛶ Full screen';
+  } else {
+    card.classList.add('fullscreen-mode');
+    if (card.requestFullscreen) card.requestFullscreen().catch(function(){});
+    this.textContent = '✕ Exit full screen';
+  }
+});
+document.addEventListener('keydown', function(e){
+  if (e.key==='Escape'){
+    var card = document.getElementById('canvasCard');
+    if (card.classList.contains('fullscreen-mode')){
+      card.classList.remove('fullscreen-mode');
+      document.getElementById('btnFullscreen').textContent = '⛶ Full screen';
+    }
+  }
+});
+
+/* export / share */
+function exportCanvas(){
+  var c = document.createElement('canvas');
+  c.width = view.width; c.height = view.height;
+  var x = c.getContext('2d');
+  x.drawImage(S.imgCanvas, 0, 0);
+  if (S.recolorLayer){ x.globalAlpha = S.intensity; x.drawImage(S.recolorLayer, 0, 0); x.globalAlpha = 1; }
+  // small caption bar
+  var bh = Math.max(26, Math.round(c.height*0.05));
+  x.fillStyle = 'rgba(13,19,32,.85)';
+  x.fillRect(0, c.height-bh, c.width, bh);
+  x.fillStyle = '#f4efe6';
+  x.font = '600 ' + Math.round(bh*0.42) + 'px Inter, Arial, sans-serif';
+  x.textBaseline = 'middle';
+  x.fillText(S.color.name + '  ' + S.color.hex.toUpperCase() + '  ·  Van Dam Painting preview', Math.round(bh*0.4), c.height-bh/2);
+  return c;
+}
+function downloadPreview(){
+  return new Promise(function(resolve){
+    exportCanvas().toBlob(function(blob){
+      var a = document.createElement('a');
+      var url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = 'vandam-color-preview.jpg';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      resolve();
+    }, 'image/jpeg', 0.92);
+  });
+}
+document.getElementById('btnDownload').addEventListener('click', function(){
+  downloadPreview().then(function(){ toast('Preview downloaded'); });
+});
+document.getElementById('btnShare').addEventListener('click', function(){
+  exportCanvas().toBlob(function(blob){
+    var file = new File([blob], 'vandam-color-preview.jpg', {type:'image/jpeg'});
+    if (navigator.canShare && navigator.canShare({files:[file]})){
+      navigator.share({
+        files:[file],
+        title:'My Van Dam color preview',
+        text: S.color.name + ' (' + S.color.hex.toUpperCase() + ') — previewed with the Van Dam Painting Color Studio'
+      }).catch(function(){});
+    } else {
+      downloadPreview().then(function(){
+        toast('Sharing isn’t available in this browser — preview downloaded instead.');
+      });
+    }
+  }, 'image/jpeg', 0.92);
+});
+
+/* estimate handoff */
+document.getElementById('btnEstimate').addEventListener('click', function(){
+  var payload = {
+    colorName: S.color.name,
+    colorHex: S.color.hex.toUpperCase(),
+    service: 'Interior painting',
+    desc: 'I previewed ' + S.color.name + ' (' + S.color.hex.toUpperCase() + ') on my wall using the Color Studio.',
+    ts: Date.now()
+  };
+  try { localStorage.setItem('vdp-handoff', JSON.stringify(payload)); } catch(e){}
+  var go = function(){ window.location.href = 'index.html#quote'; };
+  if (document.getElementById('optDownload').checked){
+    downloadPreview().then(function(){ setTimeout(go, 350); });
+  } else go();
+});
+
+/* ---------- quiz ---------- */
+var quizModal = document.getElementById('quizModal');
+var QUIZ = [
+  { key:'room',  q:'Which room are you painting?', opts:[['bedroom','Bedroom'],['living','Living room'],['kitchen','Kitchen'],['dining','Dining room'],['office','Office'],['bath','Bathroom'],['other','Other']] },
+  { key:'light', q:'How much natural light does it get?', opts:[['low','Not much'],['medium','A decent amount'],['high','Tons of light']] },
+  { key:'time',  q:'When is the room used most?', opts:[['day','Mostly daytime'],['evening','Mostly evenings']] },
+  { key:'tones', q:'What are the dominant floor & furniture tones?', opts:[['warmwood','Warm wood'],['darkwood','Dark wood'],['graywhite','Gray / white'],['mixed','A mix']] },
+  { key:'feel',  q:'How should the room feel?', opts:[['airy','Bright & airy'],['warm','Warm & welcoming'],['calm','Calm & relaxing'],['modern','Clean & modern'],['dramatic','Rich & dramatic'],['natural','Natural & grounded']] },
+  { key:'pref',  q:'Color instincts?', opts:[['warm','Warm'],['cool','Cool'],['neutral','Neutral'],['bold','Bold']] },
+];
+var quizAnswers = {};
+function openQuiz(){
+  quizAnswers = {};
+  document.getElementById('quizResults').classList.add('hidden');
+  var wrapQ = document.getElementById('quizQs');
+  wrapQ.classList.remove('hidden');
+  wrapQ.innerHTML = '';
+  QUIZ.forEach(function(item){
+    var d = document.createElement('div');
+    d.className='q';
+    d.innerHTML = '<div class="qt">'+item.q+'</div>';
+    var opts = document.createElement('div'); opts.className='opts';
+    item.opts.forEach(function(o){
+      var b = document.createElement('button');
+      b.type='button'; b.textContent=o[1];
+      b.addEventListener('click', function(){
+        quizAnswers[item.key]=o[0];
+        opts.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on');
+        maybeFinishQuiz();
+      });
+      opts.appendChild(b);
+    });
+    d.appendChild(opts);
+    wrapQ.appendChild(d);
+  });
+  quizModal.classList.add('open');
+  document.getElementById('quizClose').focus();
+}
+function maybeFinishQuiz(){
+  if (Object.keys(quizAnswers).length < QUIZ.length) return;
+  var recs = C.quizRecommend(quizAnswers);
+  document.getElementById('quizQs').classList.add('hidden');
+  var res = document.getElementById('quizResults');
+  res.classList.remove('hidden');
+  document.getElementById('quizIntro').textContent = 'Three directions that fit your answers — tap one to try it on a wall:';
+  var list = document.getElementById('recList');
+  list.innerHTML='';
+  recs.forEach(function(r){
+    var d = document.createElement('div');
+    d.className='rec';
+    d.innerHTML =
+      '<div class="pal"><i style="background:'+r.main.hex+'" title="Main"></i>' +
+      (r.accent?'<i style="background:'+r.accent.hex+'" title="Accent"></i>':'') +
+      '<i style="background:'+r.trim.hex+'" title="Trim"></i></div>' +
+      '<div><b>'+r.main.name+'</b><p>'+r.why+'</p>' +
+      '<div class="meta">Main: '+r.main.name+' '+r.main.hex.toUpperCase()+
+      (r.accent? ' · Accent: '+r.accent.name : '')+
+      ' · Trim: '+r.trim.name+'</div>' +
+      '<button class="btn btn-orange small">Try this color</button></div>';
+    d.querySelector('button').addEventListener('click', function(){
+      quizModal.classList.remove('open');
+      setColor(r.main);
+      if (S.step===1) toast('Color saved — now add a room photo to try it.');
+    });
+    list.appendChild(d);
+  });
+}
+document.getElementById('btnQuiz1').addEventListener('click', openQuiz);
+document.getElementById('btnQuiz2').addEventListener('click', openQuiz);
+document.getElementById('quizClose').addEventListener('click', function(){ quizModal.classList.remove('open'); });
+document.getElementById('quizAgain').addEventListener('click', openQuiz);
+quizModal.addEventListener('click', function(e){ if(e.target===quizModal) quizModal.classList.remove('open'); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') quizModal.classList.remove('open'); });
+
+/* deep links: ?color=hex from quiz on homepage */
+(function(){
+  var m = location.search.match(/[?&]color=([0-9a-fA-F]{6})/);
+  if (m) setColor(customColorObj('#'+m[1]), false);
+})();
+
+/* init */
+renderChips(); renderSwatches(); renderRecents();
+setColor(C.PALETTE[21], false); // Garden Sage
+setStep(1);
+})();
+</script>
+</body>
+</html>

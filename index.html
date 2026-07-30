@@ -281,6 +281,32 @@
     body{padding-bottom:76px}
   }
 
+  /* quick-answers chat widget */
+  .cw-fab{position:fixed;right:18px;bottom:18px;z-index:160;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--orange-hi),var(--orange));border:none;cursor:pointer;box-shadow:0 10px 30px rgba(226,89,31,.45);display:flex;align-items:center;justify-content:center;transition:.2s}
+  .cw-fab:hover{transform:scale(1.06)}
+  @media(max-width:760px){.cw-fab{bottom:86px}}
+  .cw{position:fixed;right:18px;bottom:88px;z-index:170;width:min(370px,calc(100vw - 28px));max-height:min(540px,calc(100vh - 120px));background:var(--bg2);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.55);display:none;flex-direction:column;overflow:hidden}
+  .cw.open{display:flex}
+  @media(max-width:760px){.cw{bottom:156px}}
+  .cw-head{background:var(--panel-2);padding:14px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line)}
+  .cw-head .dot{width:36px;height:36px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px}
+  .cw-head b{font-size:14px;display:block}
+  .cw-head small{color:var(--muted);font-size:11px;display:block}
+  .cw-close{margin-left:auto;background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:8px}
+  .cw-body{padding:14px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+  .cw-msg{max-width:85%;padding:10px 13px;border-radius:12px;font-size:13.5px;line-height:1.5}
+  .cw-msg.bot{background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
+  .cw-msg.me{background:var(--orange);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+  .cw-msg a{color:var(--orange-hi)}
+  .cw-msg.me a{color:#fff}
+  .cw-chips{display:flex;flex-wrap:wrap;gap:7px}
+  .cw-chips button{border:1px solid rgba(242,115,31,.5);background:rgba(226,89,31,.08);color:var(--cream-dim);border-radius:100px;padding:7px 13px;font-size:12px;cursor:pointer;min-height:34px}
+  .cw-chips button:hover{color:var(--orange-hi)}
+  .cw-foot{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+  .cw-foot input{flex:1;background:rgba(13,19,32,.6);border:1px solid rgba(244,239,230,.14);border-radius:8px;padding:11px 13px;color:var(--cream);font-size:13.5px}
+  .cw-foot input:focus{outline:none;border-color:var(--orange-hi)}
+  .cw-foot button{background:var(--orange);border:none;color:#fff;border-radius:8px;width:44px;min-width:44px;cursor:pointer;font-size:15px}
+
   /* reveal animation */
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -584,6 +610,22 @@
   </div>
 </section>
 
+<button class="cw-fab" id="cwFab" aria-label="Open quick answers" aria-expanded="false">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M21 12c0 4.4-4 8-9 8-1 0-2-.14-2.9-.4L4 21l1.5-3.6C4.2 16 3 14.1 3 12c0-4.4 4-8 9-8s9 3.6 9 8z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="8.5" cy="12" r="1.2" fill="#fff"/><circle cx="12" cy="12" r="1.2" fill="#fff"/><circle cx="15.5" cy="12" r="1.2" fill="#fff"/></svg>
+</button>
+<div class="cw" id="cw" role="dialog" aria-label="Quick answers">
+  <div class="cw-head">
+    <div class="dot">VD</div>
+    <div><b>VanDam quick answers</b><small>Instant FAQ answers — not a live chat. Real replies come by text or call.</small></div>
+    <button class="cw-close" id="cwClose" aria-label="Close">✕</button>
+  </div>
+  <div class="cw-body" id="cwBody"></div>
+  <div class="cw-foot">
+    <input id="cwInput" type="text" placeholder="Ask about services, area, wallpaper…" aria-label="Ask a question">
+    <button id="cwSend" aria-label="Send">➤</button>
+  </div>
+</div>
+
 <div class="mbar" id="mbar" role="navigation" aria-label="Quick contact">
   <a href="tel:+12692676801" class="mb-call">📞 Call Bryan</a>
   <a href="#quote" class="mb-est">Free Estimate</a>
@@ -698,6 +740,75 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
     }catch(err){fin()}
   }),{threshold:.4});
   document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+})();
+
+// ---- quick-answers widget (deterministic FAQ matcher — clearly not AI)
+(function(){
+  var CFG = window.VDP_CONFIG || {business:{phone:'+12692676801',phoneDisplay:'(269) 267-6801'}};
+  var PH = CFG.business.phone, PHD = CFG.business.phoneDisplay;
+  var fab=document.getElementById('cwFab'), cw=document.getElementById('cw'),
+      body=document.getElementById('cwBody'), input=document.getElementById('cwInput');
+  var contact = ' <a href="sms:'+PH+'">Text Bryan</a> · <a href="tel:'+PH+'">Call '+PHD+'</a>';
+  var QA = [
+    { k:['cost','price','charge','much','estimate','quote','rate'], a:'Every project is different, so we don\'t do blind pricing — estimates are always free, written, and no-pressure. Fastest way to a number: <a href="#quote">request a free estimate</a> or'+contact },
+    { k:['wallpaper','wall covering','wallcovering','mural'], a:'Yes — really! Residential wallpaper installation & removal, plus commercial wall coverings. Not many crews still do it. See the wallpaper section above, or'+contact },
+    { k:['area','where','portage','kalamazoo','town','location','far','travel','service'], a:'We\'re based in Portage, MI and cover the whole Southwest Michigan region — Kalamazoo, Mattawan, Paw Paw, Vicksburg, Schoolcraft, Plainwell, Richland, Three Rivers, Battle Creek and beyond.' },
+    { k:['interior','inside','room','bedroom','kitchen','cabinet'], a:'Interior is our bread and butter: walls, ceilings, trim, cabinets, drywall repair, accent walls. Want to preview a color first? Try <a href="studio.html">Paint My Room</a>.' },
+    { k:['exterior','outside','siding','deck','fence','stain','power wash'], a:'Full exterior work: siding, soffit & fascia, decks, fences, staining, power washing and prep. Michigan weather is exactly why prep matters.' },
+    { k:['commercial','office','business','retail'], a:'Yes — offices, retail and commercial spaces, including after-hours scheduling and commercial wall coverings.' },
+    { k:['color','colour','paint my room','studio','preview','try'], a:'Try our <a href="studio.html">Color Studio</a> — upload a photo of your room, trace the wall, and preview any color free. There\'s a 60-second color quiz in there too.' },
+    { k:['when','start','soon','schedule','book','available','timeline'], a:'Schedules fill fast in peak season. The sooner Bryan sees the project, the sooner you\'re on the calendar —'+contact },
+    { k:['who','bryan','bobby','brother','family','about'], a:'Van Dam Painting is two brothers — Bryan and Bobby Van Dam. When you call, you talk to a Van Dam; when it\'s painted, a Van Dam held the brush.' },
+    { k:['furniture','move','prep','cover'], a:'You don\'t need to move a thing — we move and cover furniture, protect floors, and put everything back where it was.' },
+    { k:['review','reference','trust'], a:'We\'ll happily connect you with homeowners we\'ve painted for — references on request. Ask when you'+contact.replace(' <a','  <a') },
+    { k:['hello','hi','hey'], a:'Hi! Ask me about services, our area, wallpaper, or how estimates work — or jump straight to <a href="#quote">a free estimate</a>.' },
+  ];
+  var CHIPS = [['Do you do wallpaper?','wallpaper'],['What areas do you cover?','area'],['How do estimates work?','estimate'],['Try a color on my wall','color'],['Who are you guys?','who']];
+  function add(kind, htmlStr){
+    var d=document.createElement('div');
+    d.className='cw-msg '+kind; d.innerHTML=htmlStr;
+    body.appendChild(d); body.scrollTop=body.scrollHeight;
+  }
+  function addChips(){
+    var d=document.createElement('div'); d.className='cw-chips';
+    CHIPS.forEach(function(c){
+      var b=document.createElement('button'); b.textContent=c[0]; b.type='button';
+      b.addEventListener('click',function(){ ask(c[0], c[1]); });
+      d.appendChild(b);
+    });
+    body.appendChild(d);
+  }
+  function answer(q){
+    var s=q.toLowerCase(), best=null, bestN=0;
+    QA.forEach(function(item){
+      var n=0; item.k.forEach(function(k){ var hit = k.length<6 ? new RegExp('\\b'+k+'\\b').test(s) : s.indexOf(k)!==-1; if(hit) n+=k.length; });
+      if(n>bestN){ bestN=n; best=item; }
+    });
+    return best ? best.a :
+      'That one\'s beyond my FAQ list — but Bryan will know.'+contact+' — or <a href="#quote">request a free estimate</a> and ask there.';
+  }
+  function ask(text, key){
+    add('me', text.replace(/[<>&]/g,''));
+    setTimeout(function(){ add('bot', answer(key||text)); }, 250);
+  }
+  function open(){
+    cw.classList.add('open'); fab.setAttribute('aria-expanded','true');
+    if (!body.childElementCount){
+      add('bot','Hi — I\'m the VanDam quick-answers helper (a simple FAQ guide, not AI). What can I point you to?');
+      addChips();
+    }
+    input.focus();
+  }
+  function close(){ cw.classList.remove('open'); fab.setAttribute('aria-expanded','false'); }
+  fab.addEventListener('click', function(){ cw.classList.contains('open') ? close() : open(); });
+  document.getElementById('cwClose').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  function send(){
+    var v=input.value.trim(); if(!v) return;
+    input.value=''; ask(v);
+  }
+  document.getElementById('cwSend').addEventListener('click', send);
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter') send(); });
 })();
 
 // ---- mobile bar: hide while the estimate form is on screen

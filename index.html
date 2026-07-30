@@ -104,6 +104,12 @@
   .svc li::before{content:"";position:absolute;left:0;top:14px;width:12px;height:3px;background:var(--orange);border-radius:2px}
   @media(max-width:900px){.svc-grid{grid-template-columns:1fr}}
 
+  .wallpaper-banner{margin-top:26px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;background:linear-gradient(120deg,rgba(226,89,31,.16),rgba(226,89,31,.05) 60%),linear-gradient(170deg,var(--panel),rgba(22,34,58,.4));border:1px solid rgba(242,115,31,.4);border-radius:8px;padding:34px 38px}
+  @media(max-width:760px){.wallpaper-banner{grid-template-columns:1fr}}
+  .wallpaper-banner .tagline{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--orange-hi);margin-bottom:8px}
+  .wallpaper-banner h3{font-family:var(--serif);font-size:30px;font-weight:600;margin-bottom:8px}
+  .wallpaper-banner p{color:var(--muted);font-size:15px;max-width:640px}
+
   /* ---------- BEFORE / AFTER ---------- */
   .ba-wrap{margin-top:54px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
   @media(max-width:900px){.ba-wrap{grid-template-columns:1fr}}
@@ -337,6 +343,15 @@
           <li>Epoxy &amp; specialty coatings</li>
         </ul>
       </div>
+    </div>
+
+    <div class="wallpaper-banner reveal">
+      <div>
+        <div class="tagline">A rare find</div>
+        <h3>We still hang wallpaper.</h3>
+        <p>Most crews won't touch it anymore — VanDam does residential wallpaper installation and removal, plus commercial wall coverings for offices and businesses. If you've been calling around, you can stop.</p>
+      </div>
+      <a href="#quote" class="btn btn-orange">Ask About Wallpaper</a>
     </div>
   </div>
 </section>

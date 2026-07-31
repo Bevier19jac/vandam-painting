@@ -107,3 +107,112 @@ test("palette integrity: ~30 swatches, all valid, all families represented", () 
   });
   assert.strictEqual(fams.size, 7);
 });
+
+/* ================= PRO FEATURE TESTS ================= */
+
+test("surface types & roles cover both studios", () => {
+  assert.ok(C.SURFACE_TYPES.interior.length >= 6);
+  assert.ok(C.SURFACE_TYPES.exterior.length >= 10);
+  C.SURFACE_TYPES.interior.concat(C.SURFACE_TYPES.exterior).forEach(t => {
+    assert.ok(["main","accent","trim","ceiling","door","secondary"].includes(C.roleForType(t)), t);
+  });
+});
+
+test("makeSurface produces complete editable surfaces with unique ids", () => {
+  const a = C.makeSurface("Main walls");
+  const b = C.makeSurface("Trim", "Window trim");
+  assert.notStrictEqual(a.id, b.id);
+  assert.strictEqual(b.name, "Window trim");
+  assert.strictEqual(a.visible, true);
+  assert.strictEqual(a.locked, false);
+  assert.strictEqual(a.intensity, 1);
+  assert.deepStrictEqual(a.points, []);
+});
+
+test("16 coordinated schemes, valid colors, both types, explanations", () => {
+  assert.strictEqual(C.SCHEMES.length, 16);
+  assert.strictEqual(C.schemesFor("interior").length, 8);
+  assert.strictEqual(C.schemesFor("exterior").length, 8);
+  C.SCHEMES.forEach(s => {
+    assert.ok(s.why.length > 20, s.key + " has explanation");
+    Object.values(s.colors).forEach(c => assert.ok(C.hexToRgb(c.hex), s.key));
+    assert.ok(s.colors.main && s.colors.trim);
+  });
+});
+
+test("applyScheme assigns role-appropriate colors and respects locks", () => {
+  const scheme = C.schemesFor("interior")[4]; // Dramatic Contrast
+  const surfaces = [
+    C.makeSurface("Main walls"), C.makeSurface("Accent wall"),
+    C.makeSurface("Trim"), C.makeSurface("Ceiling"),
+  ];
+  surfaces[2].locked = true;
+  const out = C.applyScheme(surfaces, scheme);
+  assert.strictEqual(out.length, 3); // trim locked out
+  const byId = Object.fromEntries(out.map(o => [o.id, o.color]));
+  assert.strictEqual(byId[surfaces[0].id].hex, scheme.colors.main.hex);
+  assert.strictEqual(byId[surfaces[1].id].hex, scheme.colors.accent.hex);
+  assert.strictEqual(byId[surfaces[3].id].hex, scheme.colors.ceiling.hex);
+});
+
+test("rankExteriorSchemes: brick pushes brick-friendly; deterministic", () => {
+  const r1 = C.rankExteriorSchemes({ brick: "red", roof: "warm", style: "traditional" });
+  const r2 = C.rankExteriorSchemes({ brick: "red", roof: "warm", style: "traditional" });
+  assert.deepStrictEqual(r1.map(x => x.scheme.key), r2.map(x => x.scheme.key));
+  const topKeys = r1.slice(0, 3).map(x => x.scheme.key);
+  assert.ok(topKeys.includes("brick-neutral"), "brick-friendly ranks high: " + topKeys);
+  const modern = C.rankExteriorSchemes({ roof: "black", style: "modern" });
+  assert.ok(["modern-charcoal","white-black","bold-door"].includes(modern[0].scheme.key));
+});
+
+test("lighting modes: known ops, invalid falls back to original", () => {
+  assert.deepStrictEqual(C.lightingOps("original"), []);
+  assert.ok(C.lightingOps("evening").length >= 1);
+  assert.ok(C.lightingOps("daylight")[0].op === "screen");
+  assert.deepStrictEqual(C.lightingOps("disco-mode"), []);
+  Object.values(C.LIGHTING).forEach(m => m.ops.forEach(o => {
+    assert.ok(C.hexToRgb(o.color) && o.alpha > 0 && o.alpha < 0.5);
+  }));
+});
+
+test("project serialize/deserialize round-trips surfaces and rejects junk", () => {
+  const s1 = C.makeSurface("Main walls"); s1.points = [[1,2],[3,4],[5,6]]; s1.closed = true;
+  s1.color = { name: "Garden Sage", hex: "#8A9A7E", family: "Greens", undertone: "neutral" };
+  const p = { id: "p1", name: "My bedroom", type: "interior", surfaces: [s1], lighting: "evening", photo: "data:image/jpeg;base64,xx" };
+  const round = C.deserializeProject(C.serializeProject(p));
+  assert.strictEqual(round.name, "My bedroom");
+  assert.strictEqual(round.lighting, "evening");
+  assert.strictEqual(round.surfaces.length, 1);
+  assert.deepStrictEqual(round.surfaces[0].points, [[1,2],[3,4],[5,6]]);
+  assert.strictEqual(round.surfaces[0].color.hex, "#8A9A7E");
+  assert.strictEqual(C.deserializeProject("not json"), null);
+  assert.strictEqual(C.deserializeProject('{"v":99}'), null);
+  assert.strictEqual(C.deserializeProject('{"v":1}'), null);
+});
+
+test("estimate summary lists every surface with color or open status", () => {
+  const s1 = C.makeSurface("Main walls"); s1.color = { name: "Oat Milk", hex: "#E4DCCB" };
+  const s2 = C.makeSurface("Trim");
+  const txt = C.estimateSummaryFromProject({ name: "Living room refresh", type: "interior", surfaces: [s1, s2] });
+  assert.ok(txt.includes("Living room refresh"));
+  assert.ok(txt.includes("2 surfaces"));
+  assert.ok(txt.includes("Oat Milk (#E4DCCB)"));
+  assert.ok(txt.includes("Trim: color still open"));
+});
+
+test("planner summary and readiness states", () => {
+  const plan = {
+    name: "Bevier house", projectType: "Interior",
+    areas: [{ name: "Living room", size: "large", surfaces: ["Walls","Trim"], occupancy: "furnished" }],
+    condition: ["Small nail holes or scuffs"], colorApproach: "Chose in Color Studio",
+    timeline: "Within one month", logistics: ["Pets"], photoCount: 2
+  };
+  const txt = C.plannerSummary(plan);
+  assert.ok(txt.includes("Living room"));
+  assert.ok(txt.includes("Walls, Trim"));
+  assert.ok(txt.includes("2 project photos"));
+  assert.strictEqual(C.plannerReadiness(plan).state, "Ready for a walkthrough");
+  assert.strictEqual(C.plannerReadiness({ areas: [{name:"x"}], condition:["Ready to paint"] }).state, "Color decision still open");
+  assert.strictEqual(C.plannerReadiness({ areas: [{name:"x"}], condition:["Peeling or flaking"], colorApproach:"help" }).state, "Surface evaluation recommended");
+  assert.strictEqual(C.plannerReadiness({}).state, "Mostly planned");
+});

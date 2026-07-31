@@ -279,6 +279,29 @@
   .foot .links a{color:var(--muted);text-decoration:none;font-size:13px}
   .foot .links a:hover{color:var(--orange-hi)}
 
+
+  /* homepage tabs */
+  .htabs-outer{padding:60px 0 0;background:var(--bg2);border-top:1px solid var(--line)}
+  .htabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-top:16px;border-bottom:1px solid var(--line)}
+  .htabs::-webkit-scrollbar{display:none}
+  .htab{flex:none;background:transparent;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:13px 20px;font-family:var(--sans);font-size:14.5px;font-weight:700;cursor:pointer;border-radius:8px 8px 0 0;min-height:48px}
+  .htab:hover{color:var(--cream)}
+  .htab.on{color:var(--cream);border-bottom-color:var(--orange-hi);background:linear-gradient(to bottom,rgba(226,89,31,.09),transparent)}
+  [id^="hpanel-"].stroke-in{animation:hstrokeIn .34s ease both}
+  @keyframes hstrokeIn{from{clip-path:inset(0 100% 0 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
+  @media(prefers-reduced-motion:reduce){[id^="hpanel-"].stroke-in{animation:none}}
+  [id^="hpanel-"] section{padding:64px 0}
+
+  /* hover-reveal descriptions */
+  @media(hover:hover){
+    .svc ul, .step p, .tool-card small{max-height:0;opacity:0;overflow:hidden;margin:0;transition:max-height .35s ease,opacity .3s ease}
+    .svc:hover ul, .svc:focus-within ul, .svc.open ul{max-height:300px;opacity:1;margin-top:4px}
+    .step:hover p, .step:focus-within p, .step.open p{max-height:200px;opacity:1}
+    .tool-card:hover small, .tool-card:focus small{max-height:120px;opacity:1;margin-top:2px}
+    .svc-more{display:block;color:var(--orange-hi);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-top:12px;font-weight:700}
+  }
+  @media(hover:none){.svc-more{display:none}}
+
   /* mobile conversion bar */
   .mbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:150;background:rgba(13,19,32,.97);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:10px;backdrop-filter:blur(10px)}
   .mbar a{flex:1;display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:8px;font-weight:700;font-size:14.5px;text-decoration:none}
@@ -331,11 +354,10 @@
     </a>
     <ul class="nav-links">
       <li><a href="studio.html#interior" style="color:var(--orange-hi);font-weight:600">Design Studio</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#work">Our Work</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#reviews">Reviews</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#services" data-htab="services">Services</a></li>
+      <li><a href="#work" data-htab="work">Our Work</a></li>
+      <li><a href="#crew" data-htab="crew">The Van Dams</a></li>
+      <li><a href="#info" data-htab="info">Process &amp; FAQ</a></li>
     </ul>
     <a href="#quote" class="btn btn-orange">Free Estimate</a>
   </div>
@@ -363,10 +385,10 @@
         <div class="drip"></div>
         <div class="teaser-logo"><img src="logo-exact.png" alt="Van Dam Painting logo"></div>
         <div class="teaser-frame" aria-hidden="true">
-          <img class="tz on" src="assets/teaser-orig.jpg" alt="">
-          <img class="tz" src="assets/teaser-sage.jpg" alt="">
-          <img class="tz" src="assets/teaser-terracotta.jpg" alt="">
-          <img class="tz" src="assets/teaser-chambray.jpg" alt="">
+          <img class="tz on" src="assets/teaser-orig.jpg?v=3" alt="">
+          <img class="tz" src="assets/teaser-sage.jpg?v=3" alt="">
+          <img class="tz" src="assets/teaser-terracotta.jpg?v=3" alt="">
+          <img class="tz" src="assets/teaser-chambray.jpg?v=3" alt="">
           <span class="teaser-chip" id="teaserChip">Original</span>
         </div>
         <h3 class="teaser-h">See it before we paint it.</h3>
@@ -378,6 +400,51 @@
   </div>
 </section>
 
+<!-- DESIGN STUDIO TOOLS -->
+<section id="design-studio" style="background:var(--bg)">
+  <div class="wrap">
+    <span class="kicker">Free Design Tools</span>
+    <h2 class="title">The Van Dam Design Studio.</h2>
+    <p class="lede">Five free tools, right in your browser — no signup, and your photos never leave your device. See the curb appeal before the first ladder goes up.</p>
+    <div class="tools-grid">
+      <a class="tool-card reveal" href="studio.html#interior">
+        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <b>Paint My Room</b><small>Upload a photo, trace your walls, ceiling and trim, and preview colors that keep the room's real light.</small>
+      </a>
+      <a class="tool-card reveal" href="studio.html#exterior">
+        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V9l8-6 8 6v11M9 20v-6h6v6" stroke="#f2731f" stroke-width="2" stroke-linejoin="round"/></svg></span>
+        <b>Curb Appeal Studio</b><small>Planning an exterior? Build your curb-appeal palette — siding, trim, shutters and a bold front door.</small>
+      </a>
+      <a class="tool-card reveal" href="studio.html#quiz">
+        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#f2731f" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 1 1 3.7 2.2c-.8.5-1.2 1-1.2 1.8v.5" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#f2731f"/></svg></span>
+        <b>Find My Colors</b><small>Six quick questions return three explained color directions you can try on a real wall.</small>
+      </a>
+      <a class="tool-card reveal" href="studio.html#planner">
+        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="17" rx="2" stroke="#f2731f" stroke-width="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <b>Build My Painting Plan</b><small>A guided planner that turns your project into a walkthrough-ready brief Bryan can act on.</small>
+      </a>
+      <a class="tool-card reveal" href="studio.html#saved">
+        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" stroke="#f2731f" stroke-width="2" stroke-linejoin="round"/></svg></span>
+        <b>Resume My Design</b><small>Your saved rooms and exteriors, waiting where you left them — on your device, private.</small>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- HOME TABS -->
+<div class="htabs-outer" id="explore">
+  <div class="wrap">
+    <span class="kicker">Explore Van Dam</span>
+    <div class="htabs" role="tablist" aria-label="Site sections" id="htablist">
+      <button class="htab on" id="htab-services" role="tab" aria-selected="true" aria-controls="hpanel-services">Services</button>
+      <button class="htab" id="htab-work" role="tab" aria-selected="false" aria-controls="hpanel-work">Our Work</button>
+      <button class="htab" id="htab-crew" role="tab" aria-selected="false" aria-controls="hpanel-crew">The Van Dams</button>
+      <button class="htab" id="htab-info" role="tab" aria-selected="false" aria-controls="hpanel-info">Process &amp; FAQ</button>
+    </div>
+  </div>
+</div>
+<div id="hpanel-services" role="tabpanel" aria-labelledby="htab-services">
 <!-- SERVICES -->
 <section class="services" id="services">
   <div class="wrap">
@@ -435,37 +502,9 @@
 </section>
 
 
-<!-- DESIGN STUDIO TOOLS -->
-<section id="design-studio" style="background:var(--bg)">
-  <div class="wrap">
-    <span class="kicker">Free Design Tools</span>
-    <h2 class="title">The Van Dam Design Studio.</h2>
-    <p class="lede">Five free tools, right in your browser — no signup, and your photos never leave your device. See the curb appeal before the first ladder goes up.</p>
-    <div class="tools-grid">
-      <a class="tool-card reveal" href="studio.html#interior">
-        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/></svg></span>
-        <b>Paint My Room</b><small>Upload a photo, trace your walls, ceiling and trim, and preview colors that keep the room's real light.</small>
-      </a>
-      <a class="tool-card reveal" href="studio.html#exterior">
-        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V9l8-6 8 6v11M9 20v-6h6v6" stroke="#f2731f" stroke-width="2" stroke-linejoin="round"/></svg></span>
-        <b>Curb Appeal Studio</b><small>Planning an exterior? Build your curb-appeal palette — siding, trim, shutters and a bold front door.</small>
-      </a>
-      <a class="tool-card reveal" href="studio.html#quiz">
-        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#f2731f" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 1 1 3.7 2.2c-.8.5-1.2 1-1.2 1.8v.5" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#f2731f"/></svg></span>
-        <b>Find My Colors</b><small>Six quick questions return three explained color directions you can try on a real wall.</small>
-      </a>
-      <a class="tool-card reveal" href="studio.html#planner">
-        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="17" rx="2" stroke="#f2731f" stroke-width="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke="#f2731f" stroke-width="2" stroke-linecap="round"/></svg></span>
-        <b>Build My Painting Plan</b><small>A guided planner that turns your project into a walkthrough-ready brief Bryan can act on.</small>
-      </a>
-      <a class="tool-card reveal" href="studio.html#saved">
-        <span class="tc-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" stroke="#f2731f" stroke-width="2" stroke-linejoin="round"/></svg></span>
-        <b>Resume My Design</b><small>Your saved rooms and exteriors, waiting where you left them — on your device, private.</small>
-      </a>
-    </div>
-  </div>
-</section>
 
+</div>
+<div id="hpanel-work" role="tabpanel" aria-labelledby="htab-work" hidden>
 <!-- BEFORE / AFTER -->
 <section id="work">
   <div class="wrap">
@@ -505,21 +544,9 @@
   </div>
 </section>
 
-<!-- PROCESS -->
-<section id="process">
-  <div class="wrap">
-    <span class="kicker">How It Works</span>
-    <h2 class="title">Simple process. Serious results.</h2>
-    <div class="steps">
-      <div class="step reveal"><h4>Free Walkthrough</h4><p>Bryan visits, listens to what you want, and delivers a clear written estimate — no surprises later.</p></div>
-      <div class="step reveal"><h4>Prep Like Pros</h4><p>Furniture covered, surfaces repaired, sanded, and primed. Great paint jobs are 80% preparation.</p></div>
-      <div class="step reveal"><h4>Paint With Care</h4><p>Premium paints, crisp cut lines, and full coverage — done by craftsmen who treat your home like their own.</p></div>
-      <div class="step reveal"><h4>Final Walkthrough</h4><p>We tour the finished job together. You're happy, or we make it right. Then we leave it cleaner than we found it.</p></div>
-    </div>
-  </div>
-</section>
 
-
+</div>
+<div id="hpanel-crew" role="tabpanel" aria-labelledby="htab-crew" hidden>
 <!-- CREW -->
 <section id="crew">
   <div class="wrap" style="text-align:center">
@@ -543,16 +570,6 @@
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="wrap" id="statsBand">
-    <div class="stat"><b data-count="800" data-plus="1">800+</b><span>Projects Completed</span></div>
-    <div class="stat"><b data-count="30" data-plus="1">30+</b><span>Years of Craft</span></div>
-    <div class="stat"><b data-count="2">2</b><span>Van Dams on Every Job</span></div>
-    <div class="stat"><b data-count="100" data-pct="1">100%</b><span>Family Owned</span></div>
-  </div>
-</div>
-
 <!-- REVIEWS -->
 <section id="reviews">
   <div class="wrap">
@@ -562,6 +579,24 @@
     <div class="rev-grid" id="revGrid"></div>
   </div>
 </section>
+
+
+</div>
+<div id="hpanel-info" role="tabpanel" aria-labelledby="htab-info" hidden>
+<!-- PROCESS -->
+<section id="process">
+  <div class="wrap">
+    <span class="kicker">How It Works</span>
+    <h2 class="title">Simple process. Serious results.</h2>
+    <div class="steps">
+      <div class="step reveal"><h4>Free Walkthrough</h4><p>Bryan visits, listens to what you want, and delivers a clear written estimate — no surprises later.</p></div>
+      <div class="step reveal"><h4>Prep Like Pros</h4><p>Furniture covered, surfaces repaired, sanded, and primed. Great paint jobs are 80% preparation.</p></div>
+      <div class="step reveal"><h4>Paint With Care</h4><p>Premium paints, crisp cut lines, and full coverage — done by craftsmen who treat your home like their own.</p></div>
+      <div class="step reveal"><h4>Final Walkthrough</h4><p>We tour the finished job together. You're happy, or we make it right. Then we leave it cleaner than we found it.</p></div>
+    </div>
+  </div>
+</section>
+
 
 <!-- SERVICE AREA + FAQ -->
 <section class="area-faq" id="faq">
@@ -594,6 +629,18 @@
     </div>
   </div>
 </section>
+
+
+</div>
+<!-- STATS -->
+<div class="stats">
+  <div class="wrap" id="statsBand">
+    <div class="stat"><b data-count="800" data-plus="1">800+</b><span>Projects Completed</span></div>
+    <div class="stat"><b data-count="30" data-plus="1">30+</b><span>Years of Craft</span></div>
+    <div class="stat"><b data-count="2">2</b><span>Van Dams on Every Job</span></div>
+    <div class="stat"><b data-count="100" data-pct="1">100%</b><span>Family Owned</span></div>
+  </div>
+</div>
 
 <!-- QUOTE -->
 <section class="quote" id="quote">
@@ -679,7 +726,7 @@
     </a>
     <p>© 2026 Van Dam Painting · 6606 Brigham St, Portage, MI · Brother-Owned &amp; Operated<br>Craftsmanship in every coat.</p>
     <div class="links">
-      <a href="studio.html#interior">Design Studio</a><a href="#services">Services</a><a href="#work">Work</a><a href="#quote">Estimate</a>
+      <a href="studio.html#interior">Design Studio</a><a href="#services" data-htab="services">Services</a><a href="#work" data-htab="work">Work</a><a href="#quote">Estimate</a>
     </div>
   </div>
 </footer>
@@ -852,6 +899,71 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   }
   document.getElementById('cwSend').addEventListener('click', send);
   input.addEventListener('keydown', function(e){ if(e.key==='Enter') send(); });
+})();
+
+// ---- homepage section tabs
+(function(){
+  var TABS=["services","work","crew","info"];
+  var ALIAS={services:"services",work:"work",crew:"crew",info:"info",process:"info",faq:"info",reviews:"crew",gallery:"work"};
+  var current="services";
+  var RED=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function show(tab,scroll){
+    if(TABS.indexOf(tab)===-1)tab="services";
+    TABS.forEach(function(t){
+      var b=document.getElementById("htab-"+t),p=document.getElementById("hpanel-"+t);
+      var on=t===tab;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+      b.classList.toggle("on",on);
+      if(on){p.hidden=false;if(!RED){p.classList.remove("stroke-in");void p.offsetWidth;p.classList.add("stroke-in");}}
+      else p.hidden=true;
+    });
+    current=tab;
+    window.dispatchEvent(new Event("resize"));
+    if(scroll){var ex=document.getElementById("explore");if(ex)ex.scrollIntoView({behavior:RED?"auto":"smooth"});}
+  }
+  TABS.forEach(function(t){
+    document.getElementById("htab-"+t).addEventListener("click",function(){
+      show(t,false);
+      try{history.replaceState(null,"","#"+t);}catch(e){}
+    });
+  });
+  document.getElementById("htablist").addEventListener("keydown",function(e){
+    var i=TABS.indexOf(current),go=null;
+    if(e.key==="ArrowRight")go=TABS[(i+1)%TABS.length];
+    if(e.key==="ArrowLeft")go=TABS[(i-1+TABS.length)%TABS.length];
+    if(e.key==="Home")go=TABS[0];
+    if(e.key==="End")go=TABS[TABS.length-1];
+    if(go){e.preventDefault();show(go,false);document.getElementById("htab-"+go).focus();}
+  });
+  document.querySelectorAll("[data-htab]").forEach(function(a){
+    a.addEventListener("click",function(){ show(a.getAttribute("data-htab"),true); });
+  });
+  function fromHash(){
+    var h=(location.hash||"").replace("#","");
+    if(ALIAS[h]) show(ALIAS[h], true);
+  }
+  window.addEventListener("hashchange",fromHash);
+  if (ALIAS[(location.hash||"").replace("#","")]) fromHash();
+})();
+
+// ---- tap/keyboard expand for service & process cards
+(function(){
+  document.querySelectorAll(".svc, .step").forEach(function(card){
+    card.setAttribute("tabindex","0");
+    if (card.classList.contains("svc")){
+      var hint=document.createElement("span");
+      hint.className="svc-more"; hint.textContent="hover for details";
+      card.appendChild(hint);
+    }
+    card.addEventListener("click",function(e){
+      if (e.target.closest("a,button")) return;
+      card.classList.toggle("open");
+    });
+    card.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); card.classList.toggle("open"); }
+    });
+  });
 })();
 
 // ---- mobile bar: hide while the estimate form is on screen
